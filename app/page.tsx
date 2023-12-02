@@ -93,14 +93,17 @@ export default function Home() {
 
   async function getCard(type : string){
     setStatus("Generating Info (~3 seconds)");
+    console.log("Input: "+type);
 
     const responseInfo = await fetch(`https://pokebackend-durj.onrender.com/pokemonInfo?type="${type}"`);
     const card = await responseInfo.json();
+    console.log(card);
 
     setStatus("Generating Image (~15 seconds)");
     const imageResponse = await fetch(`https://pokebackend-durj.onrender.com/pokemonImage?prompt=${card["imageGen"]}`);
     const image = await imageResponse.text();
     setImageURL(image);
+    console.log("ImgURL: "+image);
 
     setCardBackgroundColor(`rgb(${card["accentColor"][0]}, ${card["accentColor"][1]}, ${card["accentColor"][2]})`);
     setCardTextColor(`rgb(${card["textColor"][0]}, ${card["textColor"][1]}, ${card["textColor"][2]})`);
@@ -115,7 +118,7 @@ export default function Home() {
       <main className="my-8">
         <div>
           <h1 className="text-5xl justify-center flex mb-2 fun font-bold">Pokemon Maker</h1>
-          <h1 className="text-xl justify-center flex mb-8 fun">Type an idea and get fighting!</h1>
+          <h1 className="text-xl justify-center flex mb-8 fun">Type an idea and get fighting! *first time loading may take ~2mins to boot up</h1>
         </div>
         <div style={{ backgroundColor: cardBackgroundColor, color : cardTextColor}} className="w-96 rounded-3xl p-6 m-auto text-gray-800 border-black border-4 justify-center noise">
           <h1 className="text-sm">{card["level"]}</h1>
@@ -191,7 +194,7 @@ export default function Home() {
       </main>
 
       <div className="justify-center flex">
-        <input onChange={(e)=>{setInp(e.target.value);}} className="border-black border-2 w-96 h-8 rounded-lg p-5"></input>
+        <input onChange={(e)=>{setInp(e.target.value);}} className="border-black border-2 w-96 h-8 rounded-lg p-5" placeholder="space and all power"></input>
         <br />
         <button onClick={async ()=>{
           setCard(await getCard(inp));
