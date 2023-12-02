@@ -94,11 +94,11 @@ export default function Home() {
   async function getCard(type : string){
     setStatus("Generating Info (~3 seconds)");
 
-    const responseInfo = await fetch(`https://pokemon-backend-two.vercel.app/pokemonInfo?type="${type}"`);
+    const responseInfo = await fetch(`https://pokebackend-durj.onrender.com/pokemonInfo?type="${type}"`);
     const card = await responseInfo.json();
 
     setStatus("Generating Image (~15 seconds)");
-    const imageResponse = await fetch(`https://pokemon-backend-two.vercel.app/pokemonImage?prompt=${card["imageGen"]}`);
+    const imageResponse = await fetch(`https://pokebackend-durj.onrender.com/pokemonImage?prompt=${card["imageGen"]}`);
     const image = await imageResponse.text();
     setImageURL(image);
 
