@@ -1,7 +1,13 @@
 "use client";
 import { useState } from "react";
 import Image from 'next/image';
+import OpenAI from "openai";
+require('dotenv').config()
 import "./customCards.css";
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 import bug from '../public/bug.svg'
 import dark from '../public/dark.svg'
@@ -49,6 +55,34 @@ export default function Home() {
   const [typeImage, setTypeImage] = useState(normal);
   const [imageURL, setImageURL] = useState("./ghost.svg");
 
+  async function pokeMaker(pokemonType:string){
+    const completion = await openai.chat.completions.create({
+        messages: [
+          {
+            role: "system",
+            content: "You are a helpful assistant designed to output JSON. Include, name (string), leve (string) Basic or Mega , healthPoints (int), attackName1 (string), attackDamage1 (int), attackName2 (string), attackDamage2 (int), description (1 sentence string), backstory (short 2 sentences string), imageGen (detailed description to generate image string) accentColor (list of rgb values), textColor (list of rgb values), type (string) either bug dark dragon electric fairy fighting fire flying ghost grass ground ice normal poison psychic rock steel water",
+          },
+          { role: "user", content: "Generate a uniqe pokemon card themed from "+ pokemonType },
+        ],
+        model: "gpt-3.5-turbo-1106",
+        response_format: { type: "json_object" },
+    });
+    let output = JSON.parse(completion.choices[0].message.content!)
+    console.log("Info Output: " + output);
+    return output;
+  } 
+
+
+
+  async function pokeImage(imagePrompt:string){
+    const image = await openai.images.generate({
+        prompt: imagePrompt + " NO TEXT, cartoon",
+        model: "dall-e-3"
+    });
+    console.log("Image: " + image["data"][0]["url"]);
+    return image["data"][0]["url"];
+  }
+
   async function getTypeImage(type: string) {
     if (type === "bug") {
       setTypeImage(bug);
@@ -95,12 +129,12 @@ export default function Home() {
     setStatus("Generating Info (~3 seconds)");
     console.log("Input: "+type);
 
-    const responseInfo = await fetch(`https://pokebackend-durj.onrender.com/pokemonInfo?type="${type}"`);
+    const responseInfo = await pokeMaker(type);
     const card = await responseInfo.json();
     console.log(card);
 
     setStatus("Generating Image (~15 seconds)");
-    const imageResponse = await fetch(`https://pokebackend-durj.onrender.com/pokemonImage?prompt=${card["imageGen"]}`);
+    const imageResponse = await pokeImage(card["imageGen"]);
     const image = await imageResponse.text();
     setImageURL(image);
     console.log("ImgURL: "+image);
@@ -194,6 +228,7 @@ export default function Home() {
       </main>
 
       <div className="justify-center flex">
+        <button>Coming Soon</button>
         <input onChange={(e)=>{setInp(e.target.value);}} className="border-black border-2 w-96 h-8 rounded-lg p-5" placeholder="space and all power"></input>
         <br />
         <button onClick={async ()=>{
