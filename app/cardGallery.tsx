@@ -31,10 +31,13 @@ export default function CardGallery(){
     }, [])
 
     return (
-        <span className="grid justify-center xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2">
-            {cards.map((card:any)=>(
-                <Card cardInp={card} imageURLInp={imageURL[0]} className=""/>
-            ))}
-        </span>
+        <>
+            <button onClick={get}>Reload</button>
+            <span className="grid justify-center xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2">
+                {cards.map((card:any)=>(
+                    <Card cardInp={card} imageURLInp={card["imageURL"]} className=""/>
+                ))}
+            </span>
+        </>
     )
 }

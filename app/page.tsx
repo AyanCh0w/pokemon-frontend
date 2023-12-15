@@ -56,6 +56,8 @@ export default function Home() {
 
       setStatus("Done Generating, Make a new one?");
       card["imageURL"] = image;
+
+      console.log(card)
       setCard(card)
       uploadCard(card);
       setInp("");
