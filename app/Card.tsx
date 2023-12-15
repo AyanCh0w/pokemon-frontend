@@ -54,7 +54,7 @@ export default function Card({cardInp, imageURLInp}:any){
   let icon = 30;
 
   return (
-    <div className="my-8">
+    <div className="my-8 mx-8">
       <div 
         style={{ backgroundColor: cardBackgroundColor, color : cardTextColor}} 
         className="w-80 rounded-3xl p-6 text-gray-800 border-black border-4 justify-center noise"

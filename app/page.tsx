@@ -5,6 +5,7 @@ import Image from "next/image";
 import bug from '../public/static/bug.svg'
 import { doc, setDoc } from "firebase/firestore"; 
 import db from "./firebase";
+import CardGallery from "./cardGallery";
 
 export default function Home() {
 
@@ -27,12 +28,13 @@ export default function Home() {
         215,
         230
     ],
-    "imageGen": "some fancey image gen prompt",
     "textColor": [
       0,
       0,
       0
     ],
+    "imageGen": "some fancey image gen prompt",
+    "imageURL": ""
   });
 
   async function getCard(type : string){
@@ -48,9 +50,13 @@ export default function Home() {
       setStatus("Generating Image (~15 seconds)");
       const imageResponse = await fetch(`http://localhost:3001/pokemonImage?prompt=${card["imageGen"]}`);
       const image = await imageResponse.text();
+
       setImageURL(image);
+      console.log(imageURL)
 
       setStatus("Done Generating, Make a new one?");
+      card["imageURL"] = image;
+      setCard(card)
       uploadCard(card);
       setInp("");
     } else {
@@ -63,6 +69,8 @@ export default function Home() {
       card
     });
   }
+
+  
 
   return (
     <div className="">
@@ -95,11 +103,9 @@ export default function Home() {
         <h4 className="w-72 mt-2">{status}</h4>
       </span>
 
-      <h2 className="text-3xl">Already Generated Cards</h2>
+      <h2 className="text-3xl ml-36">Already Generated Cards</h2>
         
-      <span className="grid grid-cols-3 justify-center">
-        <Card cardInp={card} imageURLInp={imageURL}/>
-      </span>
+      <CardGallery/>
     </div>
   )
 }
