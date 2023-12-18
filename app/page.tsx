@@ -6,6 +6,7 @@ import bug from '../public/static/bug.svg'
 import { doc, setDoc } from "firebase/firestore"; 
 import db from "./firebase";
 import CardGallery from "./cardGallery";
+import loading from "../public/static/loading.gif"
 
 export default function Home() {
 
@@ -48,6 +49,7 @@ export default function Home() {
 
       console.log("Making image")
       setStatus("Generating Image (~15 seconds)");
+      setImageURL(loading)
       const imageResponse = await fetch(`http://localhost:3001/pokemonImage?prompt=${card["imageGen"]}`);
       const image = await imageResponse.text();
 

@@ -50,14 +50,14 @@ export default function Card({cardInp, imageURLInp}:any){
   let imageURL = imageURLInp;
   let typeImage = typeImages[card["type"]];
 
-  let mainImg = 250;
+  let mainImg = 320;
   let icon = 30;
 
   return (
     <div className="my-8 mx-8">
       <div 
         style={{ backgroundColor: cardBackgroundColor, color : cardTextColor}} 
-        className="w-80 rounded-3xl p-6 text-gray-800 border-black border-4 justify-center noise"
+        className="w-96 rounded-3xl p-6 text-gray-800 border-black border-4 justify-center noise"
       >
         
         <h1 className="text-sm">{card["level"]}</h1>
