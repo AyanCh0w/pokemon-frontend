@@ -1,18 +1,24 @@
 "use client";
 import { useState, useEffect } from "react";
+import { doc, setDoc, getFirestore} from "firebase/firestore"; 
+import { getStorage, ref, uploadBytes} from "firebase/storage";
+
 import Card from "./Card";
-import Image from "next/image";
 import bug from '../public/static/bug.svg'
-import { doc, setDoc } from "firebase/firestore"; 
-import db from "./firebase";
 import CardGallery from "./cardGallery";
 import loading from "../public/static/loading.gif"
+import app from "./firebase";
+import firebase from "firebase/compat/app";
+
 
 export default function Home() {
-
+  const db = getFirestore(app);
+  const storage =  getStorage();
+  const storageRef = ref(storage, 'some-child');
   const [inp, setInp] = useState("");
   const [status, setStatus] = useState("Generate a card");
   const [imageURL, setImageURL] = useState(bug);
+  const [statusBar, setStatusBar] = useState(0);
   const [card, setCard] = useState({
     "name": "Example",
     "level": "Basic",
@@ -40,12 +46,15 @@ export default function Home() {
 
   async function getCard(type : string){
     if (type != ""){
+      setStatusBar(10);
       setStatus("Generating Info (~3 seconds)");
       console.log("Generating card off of: " + type)
+      setStatusBar(20);
 
       const responseInfo = await fetch(`http://localhost:3001/pokemonInfo?type="${type}"`);
       const card = await responseInfo.json();
       setCard(card);
+      setStatusBar(50);
 
       console.log("Making image")
       setStatus("Generating Image (~15 seconds)");
@@ -55,6 +64,7 @@ export default function Home() {
 
       setImageURL(image);
       console.log(imageURL)
+      setStatusBar(90);
 
       setStatus("Done Generating, Make a new one?");
       card["imageURL"] = image;
@@ -63,6 +73,7 @@ export default function Home() {
       setCard(card)
       uploadCard(card);
       setInp("");
+      setStatusBar(100);
     } else {
       console.log("NO INPUT, pls dont spam me")
     }
@@ -74,10 +85,13 @@ export default function Home() {
     });
   }
 
-  
-
   return (
-    <div className="">
+    <div className="inline">
+      <style jsx>{`
+          .status {
+            width: ${statusBar}%
+          }
+      `}</style> 
 
       <span className="m-auto justify-center flex">
         <Card 
@@ -87,27 +101,32 @@ export default function Home() {
       </span>
 
       <div className="flex justify-center">
+
+        <div className="w-96 mb-4">
+          <div className="flex justify-between mb-1">
+            <span className="text-base font-medium text-blue-700">{status}</span>
+            <span className="text-sm font-medium text-blue-700">{statusBar}%</span>
+          </div>
+          <div className=" bg-gray-200 rounded-full h-2.5">
+            <div className="bg-blue-600 h-2.5 rounded-full status"></div>
+          </div>
+        </div>
+
+      </div>
+        
+      <div className="flex justify-center">
         <input 
-          onChange={(e)=>{
-            setInp(e.target.value);
-          }} 
-          className="border-black border-2 w-96 h-8 rounded-lg p-5">
+          onChange={(e)=>{ setInp(e.target.value) }} 
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-96 p-2.5">
         </input>
-        <br />
 
         <button 
           onClick={async ()=>{
             await getCard(inp)
           }} 
-          className="border-black border-2 rounded-lg w-36 h-10 ml-2"
+          className="bg-gray-800 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded ml-2"
         >Generate Card</button>
       </div>
-
-      <span className="justify-center flex">
-        <h4 className="w-72 mt-2">{status}</h4>
-      </span>
-
-      <h2 className="text-3xl ml-36">Already Generated Cards</h2>
         
       <CardGallery/>
     </div>
