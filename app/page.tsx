@@ -51,6 +51,8 @@ export default function Home() {
       console.log("Generating card off of: " + type)
       setStatusBar(20);
 
+      
+
       const responseInfo = await fetch(`/api/pokemonInfo?type=${type}`);
       const card = await responseInfo.json();
       setCard(card);
@@ -58,7 +60,7 @@ export default function Home() {
 
       console.log("Making image")
       setStatus("Generating Image (~15 seconds)");
-      const imageResponse = await fetch(`http://localhost:3001/pokemonImage?prompt=${card["imageGen"]}`);
+      const imageResponse = await fetch(`/api/pokemonImage?prompt=${card["imageGen"]}`);
       const image = await imageResponse.text();
 
       setImageURL(image);
