@@ -41,6 +41,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(200).json(result);
   } catch (err) {
     console.error(err);
+    console.log(process.env.OPENAI_API_KEY)
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 };
