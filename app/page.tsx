@@ -8,7 +8,6 @@ import bug from '../public/static/bug.svg'
 import CardGallery from "./cardGallery";
 import loading from "../public/static/loading.gif"
 import app from "./firebase";
-import firebase from "firebase/compat/app";
 
 
 export default function Home() {

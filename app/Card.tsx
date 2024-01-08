@@ -1,4 +1,3 @@
-import { useState } from "react";
 import "./customCards.css";
 import Image from 'next/image';
 
