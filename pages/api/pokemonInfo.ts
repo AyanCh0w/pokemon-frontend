@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { OpenAI } from 'openai';
 
 const openai = new OpenAI({
-  apiKey: "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",//process.env.OPENAI_API_KEY!,
+  apiKey: process.env.OPENAI_API_KEY!,
 });
 
 async function pokeMaker(pokemonType: string){
