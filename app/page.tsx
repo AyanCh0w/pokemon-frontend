@@ -39,7 +39,7 @@ export default function Home() {
       0,
       0
     ],
-    "imageGen": "some fancey image gen prompt",
+    "imageGen": "some fancy image gen prompt",
     "imageURL": ""
   });
 
@@ -50,16 +50,17 @@ export default function Home() {
       console.log("Generating card off of: " + type)
       setStatusBar(20);
 
-      const responseInfo = await fetch(`http://localhost:3001/pokemonInfo?type="${type}"`);
+
+      const responseInfo = await fetch(`/api/pokemonInfo?type=${type}`);
       const card = await responseInfo.json();
       setCard(card);
       setStatusBar(50);
 
       console.log("Making image")
       setStatus("Generating Image (~15 seconds)");
-      setImageURL(loading)
-      const imageResponse = await fetch(`http://localhost:3001/pokemonImage?prompt=${card["imageGen"]}`);
-      const image = await imageResponse.text();
+      const imageResponse = await fetch(`/api/pokemonImage?prompt=${card["imageGen"]}`);
+      let image = await imageResponse.text();
+      image = image.slice(1, -1)
 
       setImageURL(image);
       console.log(imageURL)
@@ -74,7 +75,7 @@ export default function Home() {
       setInp("");
       setStatusBar(100);
     } else {
-      console.log("NO INPUT, pls dont spam me")
+      console.log("NO INPUT, pls don't spam me")
     }
   }
 
