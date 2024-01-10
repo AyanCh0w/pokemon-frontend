@@ -6,6 +6,7 @@ const openai = new OpenAI({
 });
 
 async function pokeImage(imagePrompt: string) {
+    console.log(imagePrompt + " NO TEXT, cartoon, pokemon artwork")
     const response = await openai.images.generate({
         prompt: imagePrompt + " NO TEXT, cartoon, pokemon artwork",
         model: "dall-e-3"
@@ -18,6 +19,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     try {
         const imageInfo = await pokeImage(req.query.prompt as string);
         res.setHeader('Content-Type', 'application/json');
+        console.log(imageInfo)
         res.status(200).json(imageInfo);
     } catch (err: unknown) {
         console.error(err);
